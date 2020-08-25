@@ -35,9 +35,11 @@ namespace UdemyAnimeList.Web
             {
                 opt.Filters.Add<TransactionFilter>();
                 opt.Filters.Add<ValidatorActionFilter>();
-            })
-            .AddFeatureFolders()
-            .AddAreaFeatureFolders();
+            });
+
+            services.AddRazorPages()
+                .AddFeatureFolders()
+                .AddAreaFeatureFolders();
 
             var assembly = typeof(Startup).Assembly;
             services.AddFluentValidation(new[] { assembly })
@@ -69,10 +71,6 @@ namespace UdemyAnimeList.Web
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "areas",
-                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

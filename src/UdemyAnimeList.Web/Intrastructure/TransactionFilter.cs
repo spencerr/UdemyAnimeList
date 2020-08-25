@@ -24,8 +24,10 @@ namespace UdemyAnimeList.Web.Infrastructure
                 {
                     await transaction.RollbackAsync();
                 }
-
-                await transaction.CommitAsync();
+                else
+                {
+                    await transaction.CommitAsync();
+                }
             }
             catch (Exception)
             {
