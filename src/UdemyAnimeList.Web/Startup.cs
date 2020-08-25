@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using FluentValidation.AspNetCore;
+using Grinderofl.FeatureFolders;
 using MediatR;
 using MediatR.Extensions.FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -13,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using UdemyAnimeList.Data;
+using UdemyAnimeList.Web.Infrastructure;
 
 namespace UdemyAnimeList.Web
 {
@@ -28,11 +31,18 @@ namespace UdemyAnimeList.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(opt =>
+            {
+                opt.Filters.Add<TransactionFilter>();
+                opt.Filters.Add<ValidatorActionFilter>();
+            })
+            .AddFeatureFolders()
+            .AddAreaFeatureFolders();
 
             var assembly = typeof(Startup).Assembly;
-            services.AddFluentValidation(new [] { assembly })
-                .AddMediatR(typeof(Startup).Assembly);
+            services.AddFluentValidation(new[] { assembly })
+                .AddMediatR(assembly)
+                .AddAutoMapper(assembly);
 
             services.AddDbContextPool<ApplicationDbContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
         }
@@ -59,6 +69,10 @@ namespace UdemyAnimeList.Web
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "areas",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
