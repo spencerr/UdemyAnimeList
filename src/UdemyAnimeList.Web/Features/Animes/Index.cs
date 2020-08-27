@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UdemyAnimeList.Data;
 
-namespace UdemyAnimeList.Web.Features.Anime
+namespace UdemyAnimeList.Web.Features.Animes
 {
     public class Index
     {

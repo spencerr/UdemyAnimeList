@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,8 +10,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using UdemyAnimeList.Data;
 using UdemyAnimeList.Data.Enums;
+using UdemyAnimeList.Data.Models;
+using UdemyAnimeList.Web.Intrastructure.Services;
 
-namespace UdemyAnimeList.Web.Features.Anime
+namespace UdemyAnimeList.Web.Features.Animes
 {
     public class Create 
     {
@@ -38,6 +41,8 @@ namespace UdemyAnimeList.Web.Features.Anime
 
             public ShowType ShowType { get; set; }
             public Rating Rating { get; set; }
+
+            public IFormFile Image { get; set; }
         }
 
         public class CommandHandler : IRequestHandler<Command, Guid>
@@ -53,7 +58,7 @@ namespace UdemyAnimeList.Web.Features.Anime
 
             public async Task<Guid> Handle(Command request, CancellationToken cancellationToken)
             {
-                var anime = _mapper.Map<Data.Models.Anime>(request);
+                var anime = _mapper.Map<Anime>(request);
                 _context.Add(anime);
 
                 await _context.SaveChangesAsync();

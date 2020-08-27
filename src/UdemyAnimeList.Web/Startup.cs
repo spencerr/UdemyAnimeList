@@ -11,11 +11,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using UdemyAnimeList.Data;
 using UdemyAnimeList.Web.Infrastructure;
+using UdemyAnimeList.Web.Intrastructure.Services;
 
 namespace UdemyAnimeList.Web
 {
@@ -37,6 +39,8 @@ namespace UdemyAnimeList.Web
                 opt.Filters.Add<ValidatorActionFilter>();
             });
 
+            services.AddOptions<AzureFileStorage>("AzureFileStorage");
+
             services.AddRazorPages()
                 .AddFeatureFolders()
                 .AddAreaFeatureFolders();
@@ -46,7 +50,11 @@ namespace UdemyAnimeList.Web
                 .AddMediatR(assembly)
                 .AddAutoMapper(assembly);
 
-            services.AddDbContextPool<ApplicationDbContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddSingleton<IAzureFileStorage, AzureFileStorage>()
+                .AddScoped<IConfigurationCache, ConfigurationCache>();
+
+            services.AddDbContextPool<ApplicationDbContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")))
+                .AddMemoryCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

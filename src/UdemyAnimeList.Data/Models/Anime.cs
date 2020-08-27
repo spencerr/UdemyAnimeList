@@ -25,11 +25,11 @@ namespace UdemyAnimeList.Data.Models
 
         public ShowType ShowType { get; set; }
         public Rating TVRating { get; set; }
+
+        public string ImageUrl { get; set; }
         
         public Season Season { get; set; }
         public ICollection<Episode> Episodes { get; set; }
 
-        
-        
     }
 }

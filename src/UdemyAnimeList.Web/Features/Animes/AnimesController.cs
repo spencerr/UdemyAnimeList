@@ -5,13 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace UdemyAnimeList.Web.Features.Anime
+namespace UdemyAnimeList.Web.Features.Animes
 {
-    public class AnimeController : Controller
+    public class AnimesController : Controller
     {
         private readonly IMediator _mediator;
 
-        public AnimeController(IMediator mediator)
+        public AnimesController(IMediator mediator)
         {
             _mediator = mediator;
         }

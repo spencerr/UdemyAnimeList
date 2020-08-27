@@ -3,7 +3,19 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-7">
-            
+            <div class="carousel">
+                <ul class="anime-carousel">
+                    @foreach (var item in Model.CurrentSeasonAnime)
+                    {
+                        <li>
+                            <a asp-controller="Anime" asp-action="View" asp-route-id="@item.Id">
+                                <span class="position-absolute">@item.Name</span>
+                                <img src="@item.ImageUrl" />
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
         </div>
         <div class="col-5">
             <div class="card mb-2">
@@ -11,17 +23,20 @@
                     <span>Top Airing Anime</span><a asp-controller="Anime" asp-action="TopAiring" class="float-right">More</a>
                 </div>
                 <div class="card-body">
-                    <div class="row no-gutters">
-                        <div class="col-4">
-                            <img class="card-img" src="https://cdn.myanimelist.net/r/50x70/images/anime/1444/108005.webp?s=3555b686f49f4be320d26be89da96dda" />
-                        </div>
-                        <div class="col-8">
-                            <div class="card-body pt-4">
-                                <h6>1: <a href="">Re:Zero kara Hajimeru Isekai Seikatsu 2nd Season</a></h6>
-                                <p class="card-text text-muted">TV, 13 eps, scored 8.50 <br />300,000 members</p>
+                    @foreach (var anime in Model.TopAiringAnime)
+                    {
+                        <div class="row no-gutters">
+                            <div class="col-4">
+                                <img class="card-img" src="@anime.ImageUrl" />
+                            </div>
+                            <div class="col-8">
+                                <div class="card-body pt-4">
+                                    <h6>1: <a href="">@anime.Name</a></h6>
+                                    <p class="card-text text-muted">@anime.ShowType, @anime.Episodes eps, scored @anime.Score <br />@anime.MembersLiked members</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
 
@@ -30,17 +45,20 @@
                     <span>Top Upcoming Anime</span><a asp-controller="Anime" asp-action="TopUpcoming" class="float-right">More</a>
                 </div>
                 <div class="card-body">
-                    <div class="row no-gutters">
-                        <div class="col-4">
-                            <img class="card-img" src="https://cdn.myanimelist.net/r/50x70/images/anime/1704/106947.webp?s=370969492809220392e37a5176b3e2d0" />
-                        </div>
-                        <div class="col-8">
-                            <div class="card-body pt-4">
-                                <h6>1: <a href="">Kimetsu no Yaiba Movie: Mugen Ressha-hen</a></h6>
-                                <p class="card-text text-muted">Movie, 1 eps, scored N/A <br />192,969 members</p>
+                    @foreach (var anime in Model.TopUpcomingAnime)
+                    {
+                        <div class="row no-gutters">
+                            <div class="col-4">
+                                <img class="card-img" src="@anime.ImageUrl" />
+                            </div>
+                            <div class="col-8">
+                                <div class="card-body pt-4">
+                                    <h6>1: <a href="">@anime.Name</a></h6>
+                                    <p class="card-text text-muted">@anime.ShowType, @anime.Episodes eps, scored @anime.Score <br />@anime.MembersLiked members</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
 
@@ -49,17 +67,20 @@
                     <span>Most Popular Anime</span><a asp-controller="Anime" asp-action="MostPopular" class="float-right">More</a>
                 </div>
                 <div class="card-body">
-                    <div class="row no-gutters">
-                        <div class="col-4">
-                            <img class="card-img" src="https://cdn.myanimelist.net/r/50x70/images/anime/9/9453.webp?s=bcf651aae2cd301a32bcc46e317a98bc" />
-                        </div>
-                        <div class="col-8">
-                            <div class="card-body pt-4">
-                                <h6>1: <a href="">Death Note</a></h6>
-                                <p class="card-text text-muted">TV, 37 eps, scored 8.63<br />2,199,329 members</p>
+                    @foreach (var anime in Model.MostPopularAnime)
+                    {
+                        <div class="row no-gutters">
+                            <div class="col-4">
+                                <img class="card-img" src="@anime.ImageUrl" />
+                            </div>
+                            <div class="col-8">
+                                <div class="card-body pt-4">
+                                    <h6>1: <a href="">@anime.Name</a></h6>
+                                    <p class="card-text text-muted">@anime.ShowType, @anime.Episodes eps, scored @anime.Score <br />@anime.MembersLiked members</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using UdemyAnimeList.Data.Models;
 
-namespace UdemyAnimeList.Data.Configuration
+namespace UdemyAnimeList.Data.Models.EntityConfiguration
 {
     public class EpisodeConfiguration : IEntityTypeConfiguration<Episode>
     {

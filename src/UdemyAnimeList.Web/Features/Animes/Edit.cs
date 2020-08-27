@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using UdemyAnimeList.Data;
 using UdemyAnimeList.Data.Enums;
 
-namespace UdemyAnimeList.Web.Features.Anime
+namespace UdemyAnimeList.Web.Features.Animes
 {
     public class Edit
     {

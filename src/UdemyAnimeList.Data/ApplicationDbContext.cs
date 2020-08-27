@@ -10,6 +10,7 @@ namespace UdemyAnimeList.Data
         public DbSet<Anime> Animes { get; set; }
         public DbSet<Season> Seasons { get; set; }
         public DbSet<Episode> Episodes { get; set; }
+        public DbSet<Models.Configuration> Configuration { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbContextOptions) : base(dbContextOptions)
         {

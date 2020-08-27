@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UdemyAnimeList.Data.Models;
 
-namespace UdemyAnimeList.Data.Configuration
+namespace UdemyAnimeList.Data.Models.EntityConfiguration
 {
     public class AnimeConfiguration : IEntityTypeConfiguration<Anime>
     {

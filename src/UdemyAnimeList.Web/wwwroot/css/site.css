@@ -69,3 +69,23 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+.anime-carousel li {
+    list-style: none;
+}
+
+.anime-carousel a {
+    width: 160px;
+    position: absolute;
+}
+
+.anime-carousel a span {
+    width: calc(100%);
+    padding-left: 5px;
+    font-size: 12px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    color: white;
+    background-image: linear-gradient(rgba(255,0,0,0), black);
+}
