@@ -24,7 +24,7 @@ namespace UdemyAnimeList.Data.Models
         public DateTime? BroadcastTime { get; set; }
 
         public ShowType ShowType { get; set; }
-        public Rating Rating { get; set; }
+        public Rating TVRating { get; set; }
         
         public Season Season { get; set; }
         public ICollection<Episode> Episodes { get; set; }
