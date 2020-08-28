@@ -25,11 +25,6 @@ namespace UdemyAnimeList.Web.Features.Animes
         public async Task<IActionResult> Edit(Edit.Query query)
             => View(await _mediator.Send(query));
 
-        public IActionResult Create()
-            => View(new Create.Command());
-
-        
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Edit.Command model)
@@ -37,6 +32,9 @@ namespace UdemyAnimeList.Web.Features.Animes
             await _mediator.Send(model);
             return RedirectToAction("View", new { model.Id });
         }
+
+        public IActionResult Create()
+            => View(new Create.Command());
 
         [HttpPost]
         [ValidateAntiForgeryToken]

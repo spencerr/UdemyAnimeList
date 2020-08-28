@@ -1,0 +1,13 @@
+﻿@model UdemyAnimeList.Web.Features.Home.Index.Model.Anime
+
+<div class="row no-gutters">
+    <div class="col-4">
+        <img class="card-img" src="@Model.ImageUrl" />
+    </div>
+    <div class="col-8">
+        <div class="card-body pt-4">
+            <h6>@Model.Rank: <a href="">@Model.Name</a></h6>
+            <p class="card-text text-muted">@Model.ShowType, @Model.EpisodeCount eps, scored @Model.Score <br />@Model.MembersLiked members</p>
+        </div>
+    </div>
+</div>

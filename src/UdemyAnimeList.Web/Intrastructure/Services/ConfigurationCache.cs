@@ -31,7 +31,12 @@ namespace UdemyAnimeList.Web.Intrastructure.Services
             if (!_memoryCache.TryGetValue(key, out T value))
             {
                 var entry = await _context.Configuration.FindAsync(key);
-                value = (T) Convert.ChangeType(entry?.Value, typeof(T));
+                if (entry?.Value == null)
+                {
+                    return default;
+                }
+
+                value = (T) Convert.ChangeType(entry.Value, typeof(T));
                 _memoryCache.Set(key, value, CacheTime);
             }
 

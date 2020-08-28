@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using FluentValidation.AspNetCore;
 using Grinderofl.FeatureFolders;
+using Hangfire;
+using Hangfire.PostgreSql;
 using MediatR;
 using MediatR.Extensions.FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -53,6 +55,9 @@ namespace UdemyAnimeList.Web
             services.AddSingleton<IAzureFileStorage, AzureFileStorage>()
                 .AddScoped<IConfigurationCache, ConfigurationCache>();
 
+            services.AddHangfire(x => x.UsePostgreSqlStorage(Configuration.GetConnectionString("DefaultConnection")))
+                .AddHangfireServer();
+
             services.AddDbContextPool<ApplicationDbContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")))
                 .AddMemoryCache();
         }
@@ -76,6 +81,8 @@ namespace UdemyAnimeList.Web
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseHangfireDashboard();
 
             app.UseEndpoints(endpoints =>
             {

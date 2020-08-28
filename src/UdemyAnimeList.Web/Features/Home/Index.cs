@@ -24,9 +24,9 @@ namespace UdemyAnimeList.Web.Features.Home
             {
                 private readonly ApplicationDbContext _context;
                 private readonly IMapper _mapper;
-                private readonly ConfigurationCache _configurationCache;
+                private readonly IConfigurationCache _configurationCache;
 
-                public QueryHandler(ApplicationDbContext context, IMapper mapper, ConfigurationCache configurationCache)
+                public QueryHandler(ApplicationDbContext context, IMapper mapper, IConfigurationCache configurationCache)
                 {
                     _context = context;
                     _mapper = mapper;
@@ -40,23 +40,38 @@ namespace UdemyAnimeList.Web.Features.Home
 
                     var topAiringAnime = await _context.Animes
                         .Where(x => x.SeasonId == currentSeason)
+                        .OrderBy(x => x)
                         .ProjectTo<Model.Anime>(_mapper.ConfigurationProvider)
                         .Take(5).ToListAsync();
 
                     var topUpcomingAnime = await _context.Animes
                         .Where(x => x.SeasonId == nextSeason)
+                        .OrderBy(x => x)
                         .ProjectTo<Model.Anime>(_mapper.ConfigurationProvider)
                         .Take(5).ToListAsync();
 
                     var mostPopularAnime = await _context.Animes
+                        .OrderBy(x => x)
                         .ProjectTo<Model.Anime>(_mapper.ConfigurationProvider)
                         .Take(5).ToListAsync();
 
+                    var currentSeasonAnime = await _context.Animes
+                        .Where(x => x.SeasonId == currentSeason)
+                        .ProjectTo<Model.Anime>(_mapper.ConfigurationProvider)
+                        .Take(15).ToListAsync();
+
+                    var recentlyUpdatedAnime = await _context.Animes
+                        .OrderBy(x => x)
+                        .ProjectTo<Model.Anime>(_mapper.ConfigurationProvider)
+                        .Take(15).ToListAsync();
+
                     return new Model
                     {
-                        TopAiringAnime = topAiringAnime,
-                        TopUpcomingAnime = topUpcomingAnime,
-                        MostPopularAnime = mostPopularAnime
+                        TopAiringAnime = topAiringAnime.AsRankedList(),
+                        TopUpcomingAnime = topUpcomingAnime.AsRankedList(),
+                        MostPopularAnime = mostPopularAnime.AsRankedList(),
+                        CurrentSeasonAnime = currentSeasonAnime,
+                        RecentlyUpdatedAnime = recentlyUpdatedAnime,
                     };
                 }
             }
@@ -68,14 +83,16 @@ namespace UdemyAnimeList.Web.Features.Home
             public IEnumerable<Anime> TopUpcomingAnime { get; set; }
             public IEnumerable<Anime> MostPopularAnime { get; set; }
             public IEnumerable<Anime> CurrentSeasonAnime { get; set; }
+            public IEnumerable<Anime> RecentlyUpdatedAnime { get; set; }
 
 
-            public class Anime
+            public class Anime : IRankable
             {
                 public Guid Id { get; set; }
+                public int Rank { get; set; }
                 public string Name { get; set; }
                 public ShowType ShowType { get; set; }
-                public int Episodes { get; set; }
+                public int EpisodeCount { get; set; }
                 public decimal Score { get; set; }
                 public int MembersLiked { get; set; }
                 public string ImageUrl { get; set; }

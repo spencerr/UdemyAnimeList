@@ -16,6 +16,20 @@
                     }
                 </ul>
             </div>
+
+            <div class="carousel">
+                <ul class="anime-carousel">
+                    @foreach (var item in Model.RecentlyUpdatedAnime)
+                    {
+                        <li>
+                            <a asp-controller="Anime" asp-action="View" asp-route-id="@item.Id">
+                                <span class="position-absolute">@item.Name</span>
+                                <img src="@item.ImageUrl" />
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
         </div>
         <div class="col-5">
             <div class="card mb-2">
@@ -25,17 +39,7 @@
                 <div class="card-body">
                     @foreach (var anime in Model.TopAiringAnime)
                     {
-                        <div class="row no-gutters">
-                            <div class="col-4">
-                                <img class="card-img" src="@anime.ImageUrl" />
-                            </div>
-                            <div class="col-8">
-                                <div class="card-body pt-4">
-                                    <h6>1: <a href="">@anime.Name</a></h6>
-                                    <p class="card-text text-muted">@anime.ShowType, @anime.Episodes eps, scored @anime.Score <br />@anime.MembersLiked members</p>
-                                </div>
-                            </div>
-                        </div>
+                        <partial name="PopularAnime" model="anime" />
                     }
                 </div>
             </div>
@@ -47,17 +51,7 @@
                 <div class="card-body">
                     @foreach (var anime in Model.TopUpcomingAnime)
                     {
-                        <div class="row no-gutters">
-                            <div class="col-4">
-                                <img class="card-img" src="@anime.ImageUrl" />
-                            </div>
-                            <div class="col-8">
-                                <div class="card-body pt-4">
-                                    <h6>1: <a href="">@anime.Name</a></h6>
-                                    <p class="card-text text-muted">@anime.ShowType, @anime.Episodes eps, scored @anime.Score <br />@anime.MembersLiked members</p>
-                                </div>
-                            </div>
-                        </div>
+                        <partial name="PopularAnime" model="anime" />
                     }
                 </div>
             </div>
@@ -69,17 +63,7 @@
                 <div class="card-body">
                     @foreach (var anime in Model.MostPopularAnime)
                     {
-                        <div class="row no-gutters">
-                            <div class="col-4">
-                                <img class="card-img" src="@anime.ImageUrl" />
-                            </div>
-                            <div class="col-8">
-                                <div class="card-body pt-4">
-                                    <h6>1: <a href="">@anime.Name</a></h6>
-                                    <p class="card-text text-muted">@anime.ShowType, @anime.Episodes eps, scored @anime.Score <br />@anime.MembersLiked members</p>
-                                </div>
-                            </div>
-                        </div>
+                        <partial name="PopularAnime" model="anime" />
                     }
                 </div>
             </div>

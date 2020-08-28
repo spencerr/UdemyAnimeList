@@ -17,6 +17,6 @@ namespace UdemyAnimeList.Web.Features.Home
         }
 
         public async Task<IActionResult> Index()
-            => View(); //=> View(await _mediator.Send(new Index.Query()));
+            => View(await _mediator.Send(new Index.Query()));
     }
 }
