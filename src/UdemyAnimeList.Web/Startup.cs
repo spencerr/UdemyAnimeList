@@ -17,9 +17,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using UdemyAnimeList.Data;
+using UdemyAnimeList.Domain;
 using UdemyAnimeList.Web.Infrastructure;
-using UdemyAnimeList.Web.Intrastructure.Services;
+using UdemyAnimeList.Services.Cache;
+using UdemyAnimeList.Services.Amazon;
 
 namespace UdemyAnimeList.Web
 {
@@ -51,9 +52,11 @@ namespace UdemyAnimeList.Web
                 .AddAutoMapper(assembly);
 
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions())
-                .AddAWSService<IAmazonS3>();
+                .AddAWSService<IAmazonS3>()
+                .AddOptions<AmazonS3Configuration>();
 
             services.AddScoped<IConfigurationCache, ConfigurationCache>()
+                .AddScoped<IAmazonS3Service, AmazonS3Service>()
                 .AddMemoryCache();
 
             services.AddHangfire(x => x.UsePostgreSqlStorage(Configuration.GetConnectionString("DefaultConnection")))

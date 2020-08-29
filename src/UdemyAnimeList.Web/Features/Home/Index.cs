@@ -8,11 +8,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using UdemyAnimeList.Data;
-using UdemyAnimeList.Data.Common;
-using UdemyAnimeList.Data.Enums;
-using UdemyAnimeList.Data.Models;
-using UdemyAnimeList.Web.Intrastructure.Services;
+using UdemyAnimeList.Domain;
+using UdemyAnimeList.Domain.Common;
+using UdemyAnimeList.Domain.Enums;
+using UdemyAnimeList.Domain.Models;
+using UdemyAnimeList.Services.Cache;
 
 namespace UdemyAnimeList.Web.Features.Home
 {
@@ -42,18 +42,18 @@ namespace UdemyAnimeList.Web.Features.Home
                         .Where(x => x.SeasonId == currentSeason)
                         .OrderBy(x => x)
                         .ProjectTo<Model.Anime>(_mapper.ConfigurationProvider)
-                        .Take(5).ToListAsync();
+                        .Take(5).ToRankedListAsync();
 
                     var topUpcomingAnime = await _context.Animes
                         .Where(x => x.SeasonId == nextSeason)
                         .OrderBy(x => x)
                         .ProjectTo<Model.Anime>(_mapper.ConfigurationProvider)
-                        .Take(5).ToListAsync();
+                        .Take(5).ToRankedListAsync();
 
                     var mostPopularAnime = await _context.Animes
                         .OrderBy(x => x)
                         .ProjectTo<Model.Anime>(_mapper.ConfigurationProvider)
-                        .Take(5).ToListAsync();
+                        .Take(5).ToRankedListAsync();
 
                     var currentSeasonAnime = await _context.Animes
                         .Where(x => x.SeasonId == currentSeason)
@@ -67,9 +67,9 @@ namespace UdemyAnimeList.Web.Features.Home
 
                     return new Model
                     {
-                        TopAiringAnime = topAiringAnime.AsRankedList(),
-                        TopUpcomingAnime = topUpcomingAnime.AsRankedList(),
-                        MostPopularAnime = mostPopularAnime.AsRankedList(),
+                        TopAiringAnime = topAiringAnime,
+                        TopUpcomingAnime = topUpcomingAnime,
+                        MostPopularAnime = mostPopularAnime,
                         CurrentSeasonAnime = currentSeasonAnime,
                         RecentlyUpdatedAnime = recentlyUpdatedAnime,
                     };

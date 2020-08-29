@@ -1,17 +1,20 @@
-﻿using AutoMapper;
+﻿using Amazon.S3;
+using Amazon.S3.Model;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using UdemyAnimeList.Data;
-using UdemyAnimeList.Data.Enums;
-using UdemyAnimeList.Data.Models;
-using UdemyAnimeList.Web.Intrastructure.Services;
+using UdemyAnimeList.Domain;
+using UdemyAnimeList.Domain.Enums;
+using UdemyAnimeList.Domain.Models;
+using UdemyAnimeList.Services.Amazon;
 
 namespace UdemyAnimeList.Web.Features.Animes
 {
@@ -21,7 +24,10 @@ namespace UdemyAnimeList.Web.Features.Animes
         {
             public Validator()
             {
-
+                RuleFor(x => x.JapaneseName).NotEmpty().When(x => string.IsNullOrEmpty(x.EnglishName));
+                RuleFor(x => x.EnglishName).NotEmpty().When(x => string.IsNullOrEmpty(x.JapaneseName));
+                RuleFor(x => x.Image).NotNull().WithMessage("An Image is required.");
+                
             }
         }
 
@@ -37,10 +43,10 @@ namespace UdemyAnimeList.Web.Features.Animes
 
             public DateTime? StartAirDate { get; set; }
             public DateTime? EndAirDate { get; set; }
-            public DateTime? BroadcastTime { get; set; }
+            public DateTimeOffset? BroadcastTime { get; set; }
 
             public ShowType ShowType { get; set; }
-            public Rating Rating { get; set; }
+            public TVRating TVRating { get; set; }
 
             public IFormFile Image { get; set; }
         }
@@ -49,11 +55,13 @@ namespace UdemyAnimeList.Web.Features.Animes
         {
             private readonly ApplicationDbContext _context;
             private readonly IMapper _mapper;
+            private readonly IAmazonS3Service _s3;
 
-            public CommandHandler(ApplicationDbContext context, IMapper mapper)
+            public CommandHandler(ApplicationDbContext context, IMapper mapper, IAmazonS3Service s3)
             {
                 _context = context;
                 _mapper = mapper;
+                _s3 = s3;
             }
 
             public async Task<Guid> Handle(Command request, CancellationToken cancellationToken)
@@ -62,6 +70,8 @@ namespace UdemyAnimeList.Web.Features.Animes
                 _context.Add(anime);
 
                 await _context.SaveChangesAsync();
+
+                await _s3.Put(request.Image, anime.Id.ToString());
 
                 return anime.Id;
             }

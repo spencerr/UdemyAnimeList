@@ -31,7 +31,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UdemyAnimeList.Data\UdemyAnimeList.Data.csproj" />
+    <ProjectReference Include="..\UdemyAnimeList.Domain\UdemyAnimeList.Domain.csproj" />
+    <ProjectReference Include="..\UdemyAnimeList.Services\UdemyAnimeList.Services.csproj" />
   </ItemGroup>
 
 </Project>

@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using UdemyAnimeList.Data;
-using UdemyAnimeList.Data.Enums;
+using UdemyAnimeList.Domain;
+using UdemyAnimeList.Domain.Enums;
 
 namespace UdemyAnimeList.Web.Features.Animes
 {
@@ -59,7 +59,7 @@ namespace UdemyAnimeList.Web.Features.Animes
             public DateTime? BroadcastTime { get; set; }
 
             public ShowType ShowType { get; set; }
-            public Rating Rating { get; set; }
+            public TVRating Rating { get; set; }
         }
 
         public class CommandHandler : IRequest<Command>

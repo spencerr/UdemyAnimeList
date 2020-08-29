@@ -1,0 +1,81 @@
+﻿@model UdemyAnimeList.Web.Features.Animes.Create.Command
+
+<form class="container-fluid">
+    <div class="row">
+        <div class="col-6">
+            <div class="form-group">
+                <label asp-for="JapaneseName"></label>
+                <input class="form-control" type="text" asp-for="JapaneseName" />
+                <span asp-validation-for="JapaneseName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="EnglishName"></label>
+                <input class="form-control" type="text" asp-for="EnglishName" />
+                <span asp-validation-for="EnglishName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Synopsys"></label>
+                <textarea class="form-control" asp-for="Synopsys"></textarea>
+                <span asp-validation-for="Synopsys" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Background"></label>
+                <textarea class="form-control" asp-for="Background"></textarea>
+                <span asp-validation-for="Background" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Source"></label>
+                <input class="form-control" type="text" asp-for="Source" />
+                <span asp-validation-for="Source" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Image"></label>
+                <input class="form-control" type="image" asp-for="Image" />
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <div class="form-group">
+                <label asp-for="BroadcastTime"></label>
+                <input class="form-control" type="datetime" asp-for="BroadcastTime" />
+                <span asp-validation-for="BroadcastTime" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="StartAirDate"></label>
+                <input class="form-control" type="date" asp-for="StartAirDate" />
+                <span asp-validation-for="StartAirDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="EndAirDate"></label>
+                <input class="form-control" type="date" asp-for="EndAirDate" />
+                <span asp-validation-for="EndAirDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="EpisodeCount"></label>
+                <input class="form-control" type="number" asp-for="EpisodeCount" />
+                <span asp-validation-for="EpisodeCount" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ShowType"></label>
+                <select class="form-control" type="number" asp-for="ShowType" asp-items="@Html.GetEnumSelectList<UdemyAnimeList.Domain.Enums.ShowType>()"></select>
+                <span asp-validation-for="ShowType" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="TVRating"></label>
+                <select class="form-control" type="number" asp-for="TVRating" asp-items="@Html.GetEnumSelectList<UdemyAnimeList.Domain.Enums.TVRating>()"></select>
+                <span asp-validation-for="TVRating" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+</form>
