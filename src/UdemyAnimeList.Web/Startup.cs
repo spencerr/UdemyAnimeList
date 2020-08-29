@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -41,8 +40,6 @@ namespace UdemyAnimeList.Web
                 opt.Filters.Add<ValidatorActionFilter>();
             });
 
-            services.AddOptions<AzureFileStorage>("AzureFileStorage");
-
             services.AddRazorPages()
                 .AddFeatureFolders()
                 .AddAreaFeatureFolders();
@@ -52,8 +49,7 @@ namespace UdemyAnimeList.Web
                 .AddMediatR(assembly)
                 .AddAutoMapper(assembly);
 
-            services.AddSingleton<IAzureFileStorage, AzureFileStorage>()
-                .AddScoped<IConfigurationCache, ConfigurationCache>();
+            services.AddScoped<IConfigurationCache, ConfigurationCache>();
 
             services.AddHangfire(x => x.UsePostgreSqlStorage(Configuration.GetConnectionString("DefaultConnection")))
                 .AddHangfireServer();

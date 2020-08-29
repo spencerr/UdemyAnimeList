@@ -29,6 +29,10 @@ namespace UdemyAnimeList.Web
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((context, config) =>
+                {
+                    config.AddSystemsManager($"/UdemyAnimeList/{context.HostingEnvironment.EnvironmentName}/", optional: context.HostingEnvironment.IsDevelopment());
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
