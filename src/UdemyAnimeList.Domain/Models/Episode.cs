@@ -16,7 +16,10 @@ namespace UdemyAnimeList.Domain.Models
         public short Number { get; set; }
         public string Synopsys { get; set; }
         public TimeSpan? Duration { get; set; }
-        public DateTime? DateAired { get; set; }
+        public DateTimeOffset? DateAired { get; set; }
+
+        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset? UpdatedAt { get; set; }
 
         public Anime Anime { get; set; }
     }

@@ -13,6 +13,9 @@ namespace UdemyAnimeList.Domain.Models.EntityConfiguration
         {
             builder.Property(e => e.JapaneseName)
                 .IsUnicode(true);
+
+            builder.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("now() at time zone 'utc'");
         }
     }
 }

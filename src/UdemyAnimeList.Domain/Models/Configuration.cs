@@ -8,5 +8,8 @@ namespace UdemyAnimeList.Domain.Models
     {
         public string Key { get; set; }
         public string Value { get; set; }
+
+        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset? UpdatedAt { get; set; }
     }
 }

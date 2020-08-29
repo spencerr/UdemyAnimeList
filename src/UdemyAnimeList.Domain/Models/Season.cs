@@ -14,6 +14,9 @@ namespace UdemyAnimeList.Domain.Models
         public AiringSeason AiringSeason { get; set; }
         public short Year { get; set; }
 
+        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset? UpdatedAt { get; set; }
+
         public ICollection<Anime> Animes { get; set; }
     }
 }

@@ -19,12 +19,15 @@ namespace UdemyAnimeList.Domain.Models
         public string Source { get; set; }
         public int? EpisodeCount { get; set; }
 
-        public DateTime? StartAirDate { get; set; }
-        public DateTime? EndAirDate { get; set; }
+        public DateTimeOffset? StartAirDate { get; set; }
+        public DateTimeOffset? EndAirDate { get; set; }
         public DateTimeOffset? BroadcastTime { get; set; }
 
         public ShowType ShowType { get; set; }
         public TVRating TVRating { get; set; }
+
+        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset? UpdatedAt { get; set; }
         
         public Season Season { get; set; }
         public ICollection<Episode> Episodes { get; set; }

@@ -14,6 +14,9 @@ namespace UdemyAnimeList.Domain.Models.EntityConfiguration
             builder.HasMany(e => e.Animes)
                 .WithOne(e => e.Season)
                 .HasForeignKey(e => e.SeasonId);
+
+            builder.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("now() at time zone 'utc'");
         }
     }
 }

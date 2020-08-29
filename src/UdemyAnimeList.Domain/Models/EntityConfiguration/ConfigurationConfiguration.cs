@@ -11,6 +11,9 @@ namespace UdemyAnimeList.Domain.Models.EntityConfiguration
         public void Configure(EntityTypeBuilder<Configuration> builder)
         {
             builder.HasKey(e => e.Key);
+
+            builder.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("now() at time zone 'utc'");
         }
     }
 }
