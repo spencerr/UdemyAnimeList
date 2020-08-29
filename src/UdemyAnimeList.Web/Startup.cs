@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Amazon.S3;
 using AutoMapper;
 using FluentValidation.AspNetCore;
 using Grinderofl.FeatureFolders;
@@ -49,13 +50,16 @@ namespace UdemyAnimeList.Web
                 .AddMediatR(assembly)
                 .AddAutoMapper(assembly);
 
-            services.AddScoped<IConfigurationCache, ConfigurationCache>();
+            services.AddDefaultAWSOptions(Configuration.GetAWSOptions())
+                .AddAWSService<IAmazonS3>();
+
+            services.AddScoped<IConfigurationCache, ConfigurationCache>()
+                .AddMemoryCache();
 
             services.AddHangfire(x => x.UsePostgreSqlStorage(Configuration.GetConnectionString("DefaultConnection")))
                 .AddHangfireServer();
 
-            services.AddDbContextPool<ApplicationDbContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")))
-                .AddMemoryCache();
+            services.AddDbContextPool<ApplicationDbContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
