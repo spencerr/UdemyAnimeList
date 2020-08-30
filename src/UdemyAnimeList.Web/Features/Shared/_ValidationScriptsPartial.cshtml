@@ -1,2 +1,72 @@
 ﻿<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+
+    (function ($) {
+        $.validator.addMethod('require-one-of', function (value, element) {
+            const otherElement = $('#' + $(element).data('require-one-of-element'));
+            if (!otherElement.length) {
+                return false;
+            }
+
+            return (value || otherElement.val());
+        });
+
+        $.validator.addMethod('time', function (value, element) {
+            return !value || value.toString().match(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/g);
+        }, 'Please enter a value time.');
+
+        $.validator.unobtrusive.adapters.addBool('require-one-of');
+        $.validator.unobtrusive.adapters.addBool('time');
+    }(jQuery));
+
+    $(document).ready(function () {
+        let $validator = $('form').data('validator');
+        $(':input[data-val-require-one-of]').on('keyup', function () {
+            var otherElement = $('#' + $(this).data('require-one-of-element'));
+            $validator.element(otherElement);
+        });
+    });
+
+    $.validator.setDefaults({
+        errorClass: '',
+        validClass: '',
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid').removeClass('is-valid');
+            $(element.form).find(`[data-valmsg-for="${element.id}"]`).addClass('invalid-feedback');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+
+            if ($(element).val()) {
+                $(element).addClass('is-valid')
+            }
+
+            $(element.form).find(`[data-valmsg-for="${element.id}"]`).removeClass('invalid-feedback');
+            $(element).next('.invalid-feedback').remove();
+            $(element).next('.field-validation-error').children().remove();
+        },
+        errorPlacement: function (error, element) {
+            let $feedbackDiv = $(element).next('.invalid-feedback');
+            if (!$feedbackDiv.length) {
+                $feedbackDiv = $('<div class="invalid-feedback"></div>');
+                $(element).after($feedbackDiv);
+            }
+
+            $feedbackDiv.append(`<span>${error}</span>`);
+        }
+    });
+
+    $.validator.unobtrusive.options = {
+        errorPlacement: function (error, element) {
+            let $feedbackDiv = $(element).next('.invalid-feedback');
+            if (!$feedbackDiv.length) {
+                $feedbackDiv = $('<div class="invalid-feedback"></div>');
+                $(element).after($feedbackDiv);
+            }
+
+            error.appendTo($feedbackDiv);
+        }
+    };
+</script>

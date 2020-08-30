@@ -40,7 +40,7 @@ namespace UdemyAnimeList.Web
             {
                 opt.Filters.Add<TransactionFilter>();
                 opt.Filters.Add<ValidatorActionFilter>();
-            });
+            }).AddFluentValidation();
 
             services.AddRazorPages()
                 .AddFeatureFolders()

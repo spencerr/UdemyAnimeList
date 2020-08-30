@@ -24,30 +24,45 @@ namespace UdemyAnimeList.Web.Features.Animes
         {
             public Validator()
             {
-                RuleFor(x => x.JapaneseName).NotEmpty().When(x => string.IsNullOrEmpty(x.EnglishName));
-                RuleFor(x => x.EnglishName).NotEmpty().When(x => string.IsNullOrEmpty(x.JapaneseName));
-                RuleFor(x => x.Image).NotNull().WithMessage("An Image is required.");
-                
+                RuleFor(x => x.JapaneseName).NotEmpty().When(x => string.IsNullOrEmpty(x.EnglishName)).WithMessage("A Japanese or English name is required.");
+                RuleFor(x => x.EnglishName).NotEmpty().When(x => string.IsNullOrEmpty(x.JapaneseName)).WithMessage("A Japanese or English name is required.");
             }
         }
 
         public class Command : IRequest<Guid>
         {
+            [Display(Name = "Airing Season")]
             public Guid? SeasonId { get; set; }
+
+            [Display(Name = "Japanese Name")]
             public string JapaneseName { get; set; }
+
+            [Display(Name = "English Name")]
             public string EnglishName { get; set; }
             public string Synopsys { get; set; }
             public string Background { get; set; }
             public string Source { get; set; }
+
+            [Display(Name = "Number of Episodes")]
             public int? EpisodeCount { get; set; }
 
+            [Display(Name = "Airing Start")]
             public DateTime? StartAirDate { get; set; }
+
+            [Display(Name = "Airing End")]
             public DateTime? EndAirDate { get; set; }
+
+            [Display(Name = "Broadcast Time")]
             public DateTimeOffset? BroadcastTime { get; set; }
 
+            [Display(Name = "Show Type")]
             public ShowType ShowType { get; set; }
+
+            [Display(Name = "TV Rating")]
             public TVRating TVRating { get; set; }
 
+            [Display(Name = "Icon")]
+            [FileExtensions(Extensions = ".jpg, .png, .jpeg")]
             public IFormFile Image { get; set; }
         }
 
@@ -71,7 +86,10 @@ namespace UdemyAnimeList.Web.Features.Animes
 
                 await _context.SaveChangesAsync();
 
-                await _s3.Put(request.Image, anime.Id.ToString());
+                if (request.Image != null)
+                {
+                    await _s3.Put(request.Image, anime.Id.ToString());
+                }
 
                 return anime.Id;
             }
