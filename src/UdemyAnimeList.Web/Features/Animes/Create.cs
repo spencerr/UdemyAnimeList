@@ -20,15 +20,6 @@ namespace UdemyAnimeList.Web.Features.Animes
 {
     public class Create 
     {
-        public class Validator : AbstractValidator<Command>
-        {
-            public Validator()
-            {
-                RuleFor(x => x.JapaneseName).NotEmpty().When(x => string.IsNullOrEmpty(x.EnglishName)).WithMessage("A Japanese or English name is required.");
-                RuleFor(x => x.EnglishName).NotEmpty().When(x => string.IsNullOrEmpty(x.JapaneseName)).WithMessage("A Japanese or English name is required.");
-            }
-        }
-
         public class Command : IRequest<Guid>
         {
             [Display(Name = "Airing Season")]
@@ -47,10 +38,10 @@ namespace UdemyAnimeList.Web.Features.Animes
             public int? EpisodeCount { get; set; }
 
             [Display(Name = "Airing Start")]
-            public DateTime? StartAirDate { get; set; }
+            public DateTimeOffset? StartAirDate { get; set; }
 
             [Display(Name = "Airing End")]
-            public DateTime? EndAirDate { get; set; }
+            public DateTimeOffset? EndAirDate { get; set; }
 
             [Display(Name = "Broadcast Time")]
             public DateTimeOffset? BroadcastTime { get; set; }
@@ -88,12 +79,28 @@ namespace UdemyAnimeList.Web.Features.Animes
 
                 if (request.Image != null)
                 {
-                    await _s3.Put(request.Image, anime.Id.ToString());
+                    await _s3.Put(request.Image, $"images/icons/{anime.Id}");
                 }
 
                 return anime.Id;
             }
         }
 
+        public class Validator : AbstractValidator<Command>
+        {
+            public Validator()
+            {
+                RuleFor(x => x.JapaneseName).NotEmpty().When(x => string.IsNullOrEmpty(x.EnglishName)).WithMessage("A Japanese or English name is required.");
+                RuleFor(x => x.EnglishName).NotEmpty().When(x => string.IsNullOrEmpty(x.JapaneseName)).WithMessage("A Japanese or English name is required.");
+            }
+        }
+
+        public class MappingProfile : Profile
+        {
+            public MappingProfile()
+            {
+                CreateMap<Command, Anime>();
+            }
+        }
     }
 }

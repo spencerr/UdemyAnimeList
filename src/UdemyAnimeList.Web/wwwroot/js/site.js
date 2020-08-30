@@ -22,6 +22,12 @@ var redirect = function (data) {
     }
 };
 
+var createdAt = function (data, status, xhr) {
+    const redirectTo = new URL(xhr.getResponseHeader('location'));
+    redirectTo.searchParams.append("id", data.id);
+    window.location = redirectTo.href;
+};
+
 var showAjaxSummary = function (xhr) {
     $validator = $('form').validate();
     const response = JSON.parse(xhr.responseText);
@@ -59,6 +65,7 @@ $('form[method=post]').not('.no-ajax').on('submit', function (e) {
         dataType: 'json',
         statusCode: {
             200: redirect,
+            201: createdAt,
             400: showAjaxSummary,
             500: showServerError
         },

@@ -1,0 +1,97 @@
+﻿@model UdemyAnimeList.Web.Features.Animes.Edit.Command
+
+<form asp-controller="Animes" asp-action="Create" class="container-fluid needs-validation" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div id="validationSummary" class="alert alert-danger d-none"></div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-4 text-center align-self-center">
+                    <button id="ImageSelect" type="button">
+                        <img id="ImagePreview" src="~/images/no-icon.svg" data-default-src="~/images/no-icon.svg" class="preview-icon" />
+                    </button>
+                    <input class="d-none" type="file" accept="image/x-png,image/jpeg" asp-for="Image" />
+                </div>
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label asp-for="JapaneseName"></label>
+                        <input class="form-control" type="text" asp-for="JapaneseName" data-val="true" data-val-require-one-of="A Japanese or English name is required." data-require-one-of-element="EnglishName" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EnglishName"></label>
+                        <input class="form-control" type="text" asp-for="EnglishName" data-val="true" data-val-require-one-of="A Japanese or English name is required." data-require-one-of-element="JapaneseName" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Synopsys"></label>
+                <textarea class="form-control" asp-for="Synopsys" rows="5"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Background"></label>
+                <textarea class="form-control" asp-for="Background" rows="5"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Source"></label>
+                <input class="form-control" type="text" asp-for="Source" />
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="BroadcastTime"></label>
+                <input class="form-control" type="time" asp-for="BroadcastTime" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="StartAirDate"></label>
+                <input class="form-control" type="date" asp-for="StartAirDate" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="EndAirDate"></label>
+                <input class="form-control" type="date" asp-for="EndAirDate" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="EpisodeCount"></label>
+                <input class="form-control" type="number" asp-for="EpisodeCount" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ShowType"></label>
+                <select class="form-control" type="number" asp-for="ShowType" asp-items="@Html.GetEnumSelectList<UdemyAnimeList.Domain.Enums.ShowType>()"></select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="TVRating"></label>
+                <select class="form-control" type="number" asp-for="TVRating" asp-items="@Html.GetEnumSelectList<UdemyAnimeList.Domain.Enums.TVRating>()"></select>
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $("#ImageSelect").on('click', function () {
+            $('#Image').click();
+        });
+
+        $('#Image').on('change', function () {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#ImagePreview').attr('src', e.target.result);
+            };
+
+            reader.readAsDataURL(this.files[0]);
+        });
+    </script>
+}
