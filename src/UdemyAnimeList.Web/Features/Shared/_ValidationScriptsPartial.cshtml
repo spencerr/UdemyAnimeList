@@ -22,9 +22,9 @@
     }(jQuery));
 
     $(document).ready(function () {
-        let $validator = $('form').data('validator');
+        const $validator = $('form').data('validator');
         $(':input[data-val-require-one-of]').on('keyup', function () {
-            var otherElement = $('#' + $(this).data('require-one-of-element'));
+            const otherElement = $('#' + $(this).data('require-one-of-element'));
             $validator.element(otherElement);
         });
     });

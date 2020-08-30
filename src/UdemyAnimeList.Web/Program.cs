@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using UdemyAnimeList.Domain;
 
 namespace UdemyAnimeList.Web
@@ -16,15 +18,34 @@ namespace UdemyAnimeList.Web
     {
         public static void Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
-
-            using (var scope = host.Services.CreateScope())
+            try
             {
-                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                db.Database.Migrate();
-            }
+                var host = CreateHostBuilder(args).Build();
 
-            host.Run();
+                using (var scope = host.Services.CreateScope())
+                {
+                    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                    db.Database.Migrate();
+                }
+
+                host.Run();
+            }
+            catch(Exception ex)
+            {
+                if (Log.Logger == null || Log.Logger.GetType().Name == "SilentLogger")
+                {
+                    Log.Logger = new LoggerConfiguration()
+                        .MinimumLevel.Debug()
+                        .WriteTo.Console()
+                        .CreateLogger();
+                }
+
+                Log.Fatal(ex, "Host terminated unexpectedly");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -35,7 +56,18 @@ namespace UdemyAnimeList.Web
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>()
+                        .CaptureStartupErrors(true)
+                        .UseSerilog((hostingContext, loggerConfiguration) =>
+                        {
+                            loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration)
+                                .Enrich.FromLogContext()
+                                .Enrich.WithProperty("ApplicationName", typeof(Program).Assembly.GetName().Name)
+                                .Enrich.WithProperty("Environment", hostingContext.HostingEnvironment);
+#if DEBUG
+                            loggerConfiguration.Enrich.WithProperty("DebuggerAttached", Debugger.IsAttached);
+#endif
+                        });
                 });
     }
 }

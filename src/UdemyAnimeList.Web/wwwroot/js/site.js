@@ -2,14 +2,15 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+toastr.options = {
+    positionClass: 'toast-bottom-center',
+    timeOut: 0
+};
 
-
-$(document).ready(function () {
-    $('img').on('error', function () {
-        if (!$(this).attr('alt')) {
-            $(this).attr('src', $(this).attr('data-default-src') || '/images/no-icon.svg');
-        }
-    });
+$(document).on('error', 'img', function () {
+    if (!$(this).attr('alt')) {
+        $(this).attr('src', $(this).attr('data-default-src') || '/images/no-icon.svg');
+    }
 });
 
 var redirect = function (data) {
@@ -23,14 +24,17 @@ var redirect = function (data) {
 
 var showAjaxSummary = function (xhr) {
     $validator = $('form').validate();
-    let response = JSON.parse(xhr.responseText);
-    for (let entry in response) {
-        for (let error of response[entry].Errors) {
+    const response = JSON.parse(xhr.responseText);
+    for (const entry in response) {
+        for (const error of response[entry].Errors) {
             $validator.showErrors({ [entry]: error.ErrorMessage });
         }
     }
 };
 
+var showServerError = function (xhr) {
+    toastr.error('An error has occured, please try again later.', 'Server Error!');
+};
 
 $('form[method=post]').not('.no-ajax').on('submit', function (e) {
     e.preventDefault();
@@ -43,9 +47,9 @@ $('form[method=post]').not('.no-ajax').on('submit', function (e) {
     }
 
     submitBtn.prop('disabled', true);
-    //$(window).unbind();
+    $(window).unbind();
 
-    $this.find(':input').removeClass('is-invalid is-valid');
+    //$this.find(':input').removeClass('is-invalid is-valid');
 
     $.ajax({
         url: $this.attr('action'),
@@ -55,7 +59,8 @@ $('form[method=post]').not('.no-ajax').on('submit', function (e) {
         dataType: 'json',
         statusCode: {
             200: redirect,
-            400: showAjaxSummary
+            400: showAjaxSummary,
+            500: showServerError
         },
         complete: function () {
             submitBtn.prop('disabled', false);
