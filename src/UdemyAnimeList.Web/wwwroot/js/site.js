@@ -7,12 +7,6 @@ toastr.options = {
     timeOut: 0
 };
 
-$(document).on('error', 'img', function () {
-    if (!$(this).attr('alt')) {
-        $(this).attr('src', $(this).attr('data-default-src') || '/images/no-icon.svg');
-    }
-});
-
 var redirect = function (data) {
     if (data.redirect) {
         window.location = data.redirect;

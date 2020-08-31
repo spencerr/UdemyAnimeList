@@ -8,9 +8,9 @@
                     @foreach (var item in Model.CurrentSeasonAnime)
                     {
                         <li>
-                            <a asp-controller="Anime" asp-action="View" asp-route-id="@item.Id">
+                            <a asp-controller="Animes" asp-action="View" asp-route-id="@item.Id">
                                 <span class="position-absolute">@item.Name</span>
-                                <img src="@item.ImageUrl" />
+                                <img src="@item.ImageUrl" style="width: 100%;" />
                             </a>
                         </li>
                     }
@@ -22,9 +22,9 @@
                     @foreach (var item in Model.RecentlyUpdatedAnime)
                     {
                         <li>
-                            <a asp-controller="Anime" asp-action="View" asp-route-id="@item.Id">
+                            <a asp-controller="Animes" asp-action="View" asp-route-id="@item.Id">
                                 <span class="position-absolute">@item.Name</span>
-                                <img src="@item.ImageUrl" />
+                                <img src="@item.ImageUrl" style="width: 100%;" />
                             </a>
                         </li>
                     }
@@ -34,7 +34,7 @@
         <div class="col-5">
             <div class="card mb-2">
                 <div class="card-header">
-                    <span>Top Airing Anime</span><a asp-controller="Anime" asp-action="TopAiring" class="float-right">More</a>
+                    <span>Top Airing Anime</span><a asp-controller="Animes" asp-action="TopAiring" class="float-right">More</a>
                 </div>
                 <div class="card-body">
                     @foreach (var anime in Model.TopAiringAnime)
@@ -46,7 +46,7 @@
 
             <div class="card mb-2">
                 <div class="card-header">
-                    <span>Top Upcoming Anime</span><a asp-controller="Anime" asp-action="TopUpcoming" class="float-right">More</a>
+                    <span>Top Upcoming Anime</span><a asp-controller="Animes" asp-action="TopUpcoming" class="float-right">More</a>
                 </div>
                 <div class="card-body">
                     @foreach (var anime in Model.TopUpcomingAnime)
@@ -58,7 +58,7 @@
 
             <div class="card mb-2">
                 <div class="card-header">
-                    <span>Most Popular Anime</span><a asp-controller="Anime" asp-action="MostPopular" class="float-right">More</a>
+                    <span>Most Popular Anime</span><a asp-controller="Animes" asp-action="MostPopular" class="float-right">More</a>
                 </div>
                 <div class="card-body">
                     @foreach (var anime in Model.MostPopularAnime)

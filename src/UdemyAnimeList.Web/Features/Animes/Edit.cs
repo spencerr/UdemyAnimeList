@@ -80,6 +80,8 @@ namespace UdemyAnimeList.Web.Features.Animes
             [Display(Name = "Icon")]
             [FileExtensions(Extensions = ".jpg, .png, .jpeg")]
             public IFormFile Image { get; set; }
+
+            public string ImageUrl { get; set; }
         }
 
         public class CommandHandler : IRequest<Command>
@@ -102,7 +104,11 @@ namespace UdemyAnimeList.Web.Features.Animes
 
                 if (request.Image != null)
                 {
-                    await _s3.Put(request.Image, $"images/icons/{anime.Id}");
+                    var success = await _s3.Put(request.Image, $"images/icons/{anime.Id}");
+                    if (success)
+                    {
+                        anime.ImageUrl = $"images/icons/{anime.Id}";
+                    }
                 }
 
                 await _context.SaveChangesAsync(cancellationToken);

@@ -8,7 +8,7 @@
             <div class="row">
                 <div class="col-md-4 text-center align-self-center">
                     <button id="ImageSelect" type="button">
-                        <img id="ImagePreview" src="~/images/no-icon.svg" data-default-src="~/images/no-icon.svg" class="preview-icon" />
+                        <img id="ImagePreview" src="@Model.ImageUrl" class="preview-icon" />
                     </button>
                     <input class="d-none" type="file" accept="image/x-png,image/jpeg" asp-for="Image" />
                 </div>

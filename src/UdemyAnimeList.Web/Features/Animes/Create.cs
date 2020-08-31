@@ -79,7 +79,12 @@ namespace UdemyAnimeList.Web.Features.Animes
 
                 if (request.Image != null)
                 {
-                    await _s3.Put(request.Image, $"images/icons/{anime.Id}");
+                    var success = await _s3.Put(request.Image, $"images/icons/{anime.Id}");
+                    if (success)
+                    {
+                        anime.ImageUrl = $"images/icons/{anime.Id}";
+                        await _context.SaveChangesAsync();
+                    }
                 }
 
                 return anime.Id;

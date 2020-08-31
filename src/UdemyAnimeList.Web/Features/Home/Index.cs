@@ -103,7 +103,9 @@ namespace UdemyAnimeList.Web.Features.Home
         {
             public MappingProfile()
             {
-                CreateMap<Anime, Model.Anime>();
+                CreateMap<Anime, Model.Anime>()
+                    .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.JapaneseName))
+                    .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.ImageUrl ?? "/images/no-icon.svg"));
             }
         }
     }

@@ -43,5 +43,12 @@ namespace UdemyAnimeList.Web.Features.Animes
             var id = await _mediator.Send(model);
             return CreatedAtAction("View", new { id });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Delete.Command model)
+        {
+            await _mediator.Send(model);
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -18,6 +18,7 @@ namespace UdemyAnimeList.Domain.Models
         public string Background { get; set; }
         public string Source { get; set; }
         public int? EpisodeCount { get; set; }
+        public string ImageUrl { get; set; }
 
         public DateTimeOffset? StartAirDate { get; set; }
         public DateTimeOffset? EndAirDate { get; set; }
