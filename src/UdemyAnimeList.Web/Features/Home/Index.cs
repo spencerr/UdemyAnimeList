@@ -65,8 +65,13 @@ namespace UdemyAnimeList.Web.Features.Home
                         .ProjectTo<Model.Anime>(_mapper.ConfigurationProvider)
                         .Take(15).ToListAsync();
 
+                    var season = _context.Seasons
+                        .ProjectTo<Model.Season>(_mapper.ConfigurationProvider)
+                        .FirstOrDefault(x => x.Id == currentSeason);
+
                     return new Model
                     {
+                        CurrentSeason = season,
                         TopAiringAnime = topAiringAnime,
                         TopUpcomingAnime = topUpcomingAnime,
                         MostPopularAnime = mostPopularAnime,
@@ -79,6 +84,7 @@ namespace UdemyAnimeList.Web.Features.Home
 
         public class Model
         {
+            public Season CurrentSeason { get; set; }
             public IEnumerable<Anime> TopAiringAnime { get; set; }
             public IEnumerable<Anime> TopUpcomingAnime { get; set; }
             public IEnumerable<Anime> MostPopularAnime { get; set; }
@@ -97,6 +103,13 @@ namespace UdemyAnimeList.Web.Features.Home
                 public int MembersLiked { get; set; }
                 public string ImageUrl { get; set; }
             }
+
+            public class Season
+            {
+                public Guid Id { get; set; }
+                public AiringSeason AiringSeason { get; set; }
+                public short Year { get; set; }
+            }
         }
 
         public class MappingProfile : Profile
@@ -106,6 +119,8 @@ namespace UdemyAnimeList.Web.Features.Home
                 CreateMap<Anime, Model.Anime>()
                     .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.JapaneseName))
                     .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.ImageUrl ?? "/images/no-icon.svg"));
+
+                CreateMap<Season, Model.Season>();
             }
         }
     }

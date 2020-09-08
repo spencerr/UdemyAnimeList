@@ -22,6 +22,7 @@ using UdemyAnimeList.Web.Infrastructure;
 using UdemyAnimeList.Services.Cache;
 using UdemyAnimeList.Services.Amazon;
 using Serilog;
+using UdemyAnimeList.Web.Middleware;
 
 namespace UdemyAnimeList.Web
 {
@@ -37,11 +38,17 @@ namespace UdemyAnimeList.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews(opt =>
+            /*services.AddControllersWithViews(opt =>
             {
                 opt.Filters.Add<TransactionFilter>();
                 opt.Filters.Add<ValidatorActionFilter>();
-            }).AddFluentValidation();
+            }).AddFluentValidation();*/
+
+            services.AddControllers();
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "client-app/dist";
+            });
 
             services.AddRazorPages()
                 .AddFeatureFolders()
@@ -95,9 +102,21 @@ namespace UdemyAnimeList.Web
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
+                /*endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");*/
+                endpoints.MapControllers();
+            });
+
+            app.UseSpaStaticFiles();
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "client-app";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseVueDevelopmentServer();
+                }
             });
         }
     }
