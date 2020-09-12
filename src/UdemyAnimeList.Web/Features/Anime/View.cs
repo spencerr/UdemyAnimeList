@@ -10,9 +10,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using UdemyAnimeList.Domain;
 using UdemyAnimeList.Domain.Enums;
-using UdemyAnimeList.Domain.Models;
 
-namespace UdemyAnimeList.Web.Features.Animes
+using DbAnime = UdemyAnimeList.Domain.Models.Anime;
+
+namespace UdemyAnimeList.Web.Features.Anime
 {
     public class View
     {
@@ -81,7 +82,7 @@ namespace UdemyAnimeList.Web.Features.Animes
         {
             public MappingProfile()
             {
-                CreateMap<Anime, Model>();
+                CreateMap<DbAnime, Model>();
             }
         }
     }

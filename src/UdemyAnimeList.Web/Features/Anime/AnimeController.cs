@@ -6,15 +6,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace UdemyAnimeList.Web.Features.Animes
+namespace UdemyAnimeList.Web.Features.Anime
 {
     [ApiController]
     [Route("/api/anime")]
-    public class AnimesController : Controller
+    public class AnimeController : Controller
     {
         private readonly IMediator _mediator;
 
-        public AnimesController(IMediator mediator)
+        public AnimeController(IMediator mediator)
         {
             _mediator = mediator;
         }

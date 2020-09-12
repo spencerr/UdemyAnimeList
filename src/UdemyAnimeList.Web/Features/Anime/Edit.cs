@@ -1,10 +1,9 @@
-﻿using Amazon.S3;
-using Amazon.S3.Model;
-using AutoMapper;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,12 +15,40 @@ using UdemyAnimeList.Domain.Enums;
 using UdemyAnimeList.Domain.Models;
 using UdemyAnimeList.Services.Amazon;
 
-namespace UdemyAnimeList.Web.Features.Animes
+using DbAnime = UdemyAnimeList.Domain.Models.Anime;
+
+namespace UdemyAnimeList.Web.Features.Anime
 {
-    public class Create 
+    public class Edit
     {
+        public class Query : IRequest<Command>
+        {
+            public Guid Id { get; set; }
+        }
+
+        public class QueryHandler : IRequestHandler<Query, Command>
+        {
+            private readonly ApplicationDbContext _context;
+            private readonly IMapper _mapper;
+
+            public QueryHandler(ApplicationDbContext context, IMapper mapper)
+            {
+                _context = context;
+                _mapper = mapper;
+            }
+
+            public async Task<Command> Handle(Query request, CancellationToken cancellationToken)
+            {
+                return await _context.Animes
+                    .ProjectTo<Command>(_mapper.ConfigurationProvider)
+                    .FirstOrDefaultAsync(x => x.Id == request.Id);
+            }
+        }
+
         public class Command : IRequest<Guid>
         {
+            public Guid Id { get; set; }
+
             [Display(Name = "Airing Season")]
             public Guid? SeasonId { get; set; }
 
@@ -55,6 +82,8 @@ namespace UdemyAnimeList.Web.Features.Animes
             [Display(Name = "Icon")]
             [FileExtensions(Extensions = ".jpg, .png, .jpeg")]
             public IFormFile Image { get; set; }
+
+            public string ImageUrl { get; set; }
         }
 
         public class CommandHandler : IRequestHandler<Command, Guid>
@@ -72,10 +101,8 @@ namespace UdemyAnimeList.Web.Features.Animes
 
             public async Task<Guid> Handle(Command request, CancellationToken cancellationToken)
             {
-                var anime = _mapper.Map<Anime>(request);
-                _context.Add(anime);
-
-                await _context.SaveChangesAsync();
+                var anime = await _context.Animes.FindAsync(request.Id);
+                _mapper.Map(request, anime);
 
                 if (request.Image != null)
                 {
@@ -83,10 +110,10 @@ namespace UdemyAnimeList.Web.Features.Animes
                     if (success)
                     {
                         anime.ImageUrl = $"images/icons/{anime.Id}";
-                        await _context.SaveChangesAsync();
                     }
                 }
 
+                await _context.SaveChangesAsync(cancellationToken);
                 return anime.Id;
             }
         }
@@ -104,7 +131,9 @@ namespace UdemyAnimeList.Web.Features.Animes
         {
             public MappingProfile()
             {
-                CreateMap<Command, Anime>();
+                CreateMap<Command, DbAnime>()
+                    .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow));
+                CreateMap<DbAnime, Command>();
             }
         }
     }

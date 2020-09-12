@@ -74,7 +74,7 @@
       }
     },
     mounted() {
-      this.axios.get('/api/home/retrieve').then(response => {
+      this.axios.get('/home/retrieve').then(response => {
         this.currentSeason = response.data.currentSeason;
         this.currentSeasonAnime = response.data.currentSeasonAnime;
         this.recentlyUpdatedAnime = response.data.recentlyUpdatedAnime;

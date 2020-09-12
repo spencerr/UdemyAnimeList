@@ -14,6 +14,8 @@ using UdemyAnimeList.Domain.Enums;
 using UdemyAnimeList.Domain.Models;
 using UdemyAnimeList.Services.Cache;
 
+using DbAnime = UdemyAnimeList.Domain.Models.Anime;
+
 namespace UdemyAnimeList.Web.Features.Home
 {
     public class Index
@@ -116,7 +118,7 @@ namespace UdemyAnimeList.Web.Features.Home
         {
             public MappingProfile()
             {
-                CreateMap<Anime, Model.Anime>()
+                CreateMap<DbAnime, Model.Anime>()
                     .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.JapaneseName))
                     .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.ImageUrl ?? "/images/no-icon.svg"));
 

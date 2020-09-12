@@ -9,7 +9,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using UdemyAnimeList.Domain;
 
-namespace UdemyAnimeList.Web.Features.Animes
+using DbAnime = UdemyAnimeList.Domain.Models.Anime;
+
+namespace UdemyAnimeList.Web.Features.Anime
 {
     public class Index
     {

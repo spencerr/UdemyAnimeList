@@ -16,7 +16,7 @@
     },
     mounted() {
       const id = this.$route.params.id;
-      this.axios.get(`/api/anime/${id}`).then(response => {
+      this.axios.get(`/anime/${id}`).then(response => {
         if (response.data.id !== id) return;
         this.anime = response.data;
       })

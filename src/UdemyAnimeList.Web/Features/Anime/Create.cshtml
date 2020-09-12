@@ -1,14 +1,13 @@
-﻿@model UdemyAnimeList.Web.Features.Animes.Edit.Command
+﻿@model UdemyAnimeList.Web.Features.Anime.Create.Command
 
 <form asp-controller="Animes" asp-action="Create" class="container-fluid needs-validation" method="post">
-    <input type="hidden" asp-for="Id" />
     <div id="validationSummary" class="alert alert-danger d-none"></div>
     <div class="row">
         <div class="col-md-6">
             <div class="row">
                 <div class="col-md-4 text-center align-self-center">
                     <button id="ImageSelect" type="button">
-                        <img id="ImagePreview" src="@Model.ImageUrl" class="preview-icon" />
+                        <img id="ImagePreview" src="~/images/no-icon.svg" data-default-src="~/images/no-icon.svg" class="preview-icon" />
                     </button>
                     <input class="d-none" type="file" accept="image/x-png,image/jpeg" asp-for="Image" />
                 </div>
@@ -19,7 +18,7 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="EnglishName"></label>
-                        <input class="form-control" type="text" asp-for="EnglishName" data-val="true" data-val-require-one-of="A Japanese or English name is required." data-require-one-of-element="JapaneseName" />
+                        <input class="form-control" type="text" asp-for="EnglishName" data-val="true" data-val-require-one-of="A Japanese or English name is required." data-require-one-of-element="JapaneseName"/>
                     </div>
                 </div>
             </div>
@@ -94,4 +93,5 @@
             reader.readAsDataURL(this.files[0]);
         });
     </script>
+
 }

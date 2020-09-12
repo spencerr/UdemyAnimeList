@@ -23,6 +23,8 @@ using UdemyAnimeList.Services.Cache;
 using UdemyAnimeList.Services.Amazon;
 using Serilog;
 using UdemyAnimeList.Web.Middleware;
+using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Http;
 
 namespace UdemyAnimeList.Web
 {
@@ -38,13 +40,10 @@ namespace UdemyAnimeList.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            /*services.AddControllersWithViews(opt =>
-            {
+            services.AddControllers(opt => {
                 opt.Filters.Add<TransactionFilter>();
-                opt.Filters.Add<ValidatorActionFilter>();
-            }).AddFluentValidation();*/
+            }).AddFluentValidation();
 
-            services.AddControllers();
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "client-app/dist";
@@ -73,10 +72,17 @@ namespace UdemyAnimeList.Web
                 .AddHangfireServer();
 
             services.AddDbContextPool<ApplicationDbContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddSwaggerDocument(cfg =>
+            {
+                cfg.SchemaNameGenerator = new MediatrSchemaNameGenerator();
+            });
+
+            services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IAntiforgery antiforgery)
         {
             if (env.IsDevelopment())
             {
@@ -98,7 +104,19 @@ namespace UdemyAnimeList.Web
 
             app.UseAuthorization();
 
+            app.Use(async (context, next) =>
+            {
+
+                var tokens = antiforgery.GetAndStoreTokens(context);
+                context.Response.Cookies.Append("XSRF-TOKEN", tokens.RequestToken, new CookieOptions { HttpOnly = false });
+
+                await next();
+            });
+
             app.UseHangfireDashboard();
+
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseEndpoints(endpoints =>
             {

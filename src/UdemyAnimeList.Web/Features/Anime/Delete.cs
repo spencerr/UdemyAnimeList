@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 using UdemyAnimeList.Domain;
 using UdemyAnimeList.Services.Amazon;
 
-namespace UdemyAnimeList.Web.Features.Animes
+using DbAnime = UdemyAnimeList.Domain.Models.Anime;
+
+namespace UdemyAnimeList.Web.Features.Anime
 {
     public class Delete
     {

@@ -1,52 +1,23 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UdemyAnimeList.Domain;
 using UdemyAnimeList.Domain.Enums;
-using UdemyAnimeList.Domain.Models;
 using UdemyAnimeList.Services.Amazon;
 
-namespace UdemyAnimeList.Web.Features.Animes
+using DbAnime = UdemyAnimeList.Domain.Models.Anime;
+
+namespace UdemyAnimeList.Web.Features.Anime
 {
-    public class Edit
+    public class Create 
     {
-        public class Query : IRequest<Command>
-        {
-            public Guid Id { get; set; }
-        }
-
-        public class QueryHandler : IRequestHandler<Query, Command>
-        {
-            private readonly ApplicationDbContext _context;
-            private readonly IMapper _mapper;
-
-            public QueryHandler(ApplicationDbContext context, IMapper mapper)
-            {
-                _context = context;
-                _mapper = mapper;
-            }
-
-            public async Task<Command> Handle(Query request, CancellationToken cancellationToken)
-            {
-                return await _context.Animes
-                    .ProjectTo<Command>(_mapper.ConfigurationProvider)
-                    .FirstOrDefaultAsync(x => x.Id == request.Id);
-            }
-        }
-
         public class Command : IRequest<Guid>
         {
-            public Guid Id { get; set; }
-
             [Display(Name = "Airing Season")]
             public Guid? SeasonId { get; set; }
 
@@ -80,11 +51,9 @@ namespace UdemyAnimeList.Web.Features.Animes
             [Display(Name = "Icon")]
             [FileExtensions(Extensions = ".jpg, .png, .jpeg")]
             public IFormFile Image { get; set; }
-
-            public string ImageUrl { get; set; }
         }
 
-        public class CommandHandler : IRequest<Command>
+        public class CommandHandler : IRequestHandler<Command, Guid>
         {
             private readonly ApplicationDbContext _context;
             private readonly IMapper _mapper;
@@ -97,10 +66,12 @@ namespace UdemyAnimeList.Web.Features.Animes
                 _s3 = s3;
             }
 
-            public async Task Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Guid> Handle(Command request, CancellationToken cancellationToken)
             {
-                var anime = await _context.Animes.FindAsync(request.Id);
-                _mapper.Map(request, anime);
+                var anime = _mapper.Map<DbAnime>(request);
+                _context.Add(anime);
+
+                await _context.SaveChangesAsync();
 
                 if (request.Image != null)
                 {
@@ -108,10 +79,11 @@ namespace UdemyAnimeList.Web.Features.Animes
                     if (success)
                     {
                         anime.ImageUrl = $"images/icons/{anime.Id}";
+                        await _context.SaveChangesAsync();
                     }
                 }
 
-                await _context.SaveChangesAsync(cancellationToken);
+                return anime.Id;
             }
         }
 
@@ -128,9 +100,7 @@ namespace UdemyAnimeList.Web.Features.Animes
         {
             public MappingProfile()
             {
-                CreateMap<Command, Anime>()
-                    .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow));
-                CreateMap<Anime, Command>();
+                CreateMap<Command, DbAnime>();
             }
         }
     }
