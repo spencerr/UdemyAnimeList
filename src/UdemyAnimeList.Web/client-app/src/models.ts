@@ -8,6 +8,7 @@
 // ReSharper disable InconsistentNaming
 
 import * as moment from 'moment';
+import 'moment-duration-format';
 
 
 export class HomeIndexModel {
@@ -308,7 +309,7 @@ export class AnimeEditCommand {
     episodeCount?: number | undefined;
     startAirDate?: moment.Moment | undefined;
     endAirDate?: moment.Moment | undefined;
-    broadcastTime?: moment.Moment | undefined;
+    broadcastTime?: moment.Duration | undefined;
     showType!: ShowType;
     tvRating!: TVRating;
     image?: any | undefined;
@@ -326,7 +327,7 @@ export class AnimeEditCommand {
             this.episodeCount = _data["episodeCount"];
             this.startAirDate = _data["startAirDate"] ? moment(_data["startAirDate"].toString()) : <any>undefined;
             this.endAirDate = _data["endAirDate"] ? moment(_data["endAirDate"].toString()) : <any>undefined;
-            this.broadcastTime = _data["broadcastTime"] ? moment(_data["broadcastTime"].toString()) : <any>undefined;
+            this.broadcastTime = _data["broadcastTime"] ? moment.duration(_data["broadcastTime"].toString()) : <any>undefined;
             this.showType = _data["showType"];
             this.tvRating = _data["tvRating"];
             this.image = _data["image"];
@@ -353,7 +354,7 @@ export class AnimeEditCommand {
         data["episodeCount"] = this.episodeCount;
         data["startAirDate"] = this.startAirDate ? this.startAirDate.toISOString() : <any>undefined;
         data["endAirDate"] = this.endAirDate ? this.endAirDate.toISOString() : <any>undefined;
-        data["broadcastTime"] = this.broadcastTime ? this.broadcastTime.toISOString() : <any>undefined;
+        data["broadcastTime"] = this.broadcastTime ? this.broadcastTime.format('d.hh:mm:ss.SS', { trim: false }) : <any>undefined;
         data["showType"] = this.showType;
         data["tvRating"] = this.tvRating;
         data["image"] = this.image;
@@ -419,6 +420,11 @@ export class AnimeCreateCommand {
         data["image"] = this.image;
         return data; 
     }
+}
+
+export interface FileParameter {
+    data: any;
+    fileName: string;
 }
 
 export interface FileResponse {

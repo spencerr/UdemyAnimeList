@@ -4,6 +4,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,7 +15,7 @@ using UdemyAnimeList.Domain;
 using UdemyAnimeList.Domain.Enums;
 using UdemyAnimeList.Domain.Models;
 using UdemyAnimeList.Services.Amazon;
-
+using UdemyAnimeList.Web.Intrastructure;
 using DbAnime = UdemyAnimeList.Domain.Models.Anime;
 
 namespace UdemyAnimeList.Web.Features.Anime
@@ -71,7 +72,7 @@ namespace UdemyAnimeList.Web.Features.Anime
             public DateTimeOffset? EndAirDate { get; set; }
 
             [Display(Name = "Broadcast Time")]
-            public DateTimeOffset? BroadcastTime { get; set; }
+            public TimeSpan? BroadcastTime { get; set; }
 
             [Display(Name = "Show Type")]
             public ShowType ShowType { get; set; }
@@ -80,9 +81,10 @@ namespace UdemyAnimeList.Web.Features.Anime
             public TVRating TVRating { get; set; }
 
             [Display(Name = "Icon")]
-            [FileExtensions(Extensions = ".jpg, .png, .jpeg")]
+            [FileType(new[] { ".jpg", ".png" })]
             public IFormFile Image { get; set; }
 
+            [CdnUrl]
             public string ImageUrl { get; set; }
         }
 
@@ -133,7 +135,8 @@ namespace UdemyAnimeList.Web.Features.Anime
             {
                 CreateMap<Command, DbAnime>()
                     .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow));
-                CreateMap<DbAnime, Command>();
+                CreateMap<DbAnime, Command>()
+                    .ForMember(dest => dest.ImageUrl, opt => opt.Ignore());
             }
         }
     }

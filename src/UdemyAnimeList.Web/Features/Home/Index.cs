@@ -3,8 +3,10 @@ using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,8 +14,9 @@ using UdemyAnimeList.Domain;
 using UdemyAnimeList.Domain.Common;
 using UdemyAnimeList.Domain.Enums;
 using UdemyAnimeList.Domain.Models;
+using UdemyAnimeList.Services.Amazon;
 using UdemyAnimeList.Services.Cache;
-
+using UdemyAnimeList.Web.Intrastructure;
 using DbAnime = UdemyAnimeList.Domain.Models.Anime;
 
 namespace UdemyAnimeList.Web.Features.Home
@@ -103,6 +106,8 @@ namespace UdemyAnimeList.Web.Features.Home
                 public int EpisodeCount { get; set; }
                 public decimal Score { get; set; }
                 public int MembersLiked { get; set; }
+
+                [CdnUrl]
                 public string ImageUrl { get; set; }
             }
 

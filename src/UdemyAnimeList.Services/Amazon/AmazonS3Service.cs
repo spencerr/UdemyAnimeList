@@ -21,6 +21,7 @@ namespace UdemyAnimeList.Services.Amazon
     public class AmazonS3Configuration 
     {
         public string BucketName { get; set; }
+        public string CdnUrl { get; set; }
     }
 
     public class AmazonS3Service : IAmazonS3Service

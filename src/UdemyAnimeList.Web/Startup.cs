@@ -25,6 +25,8 @@ using Serilog;
 using UdemyAnimeList.Web.Middleware;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
+using UdemyAnimeList.Web.Intrastructure;
+using Microsoft.Extensions.Options;
 
 namespace UdemyAnimeList.Web
 {
@@ -42,7 +44,12 @@ namespace UdemyAnimeList.Web
         {
             services.AddControllers(opt => {
                 opt.Filters.Add<TransactionFilter>();
-            }).AddFluentValidation();
+                opt.Filters.Add<ValidatorActionFilter>();
+            }).AddFluentValidation()
+            .AddNewtonsoftJson(opt =>
+            {
+                opt.SerializerSettings.ContractResolver = new CdnUrlResolver(Configuration.GetSection("S3Configuration").GetValue<string>("CdnUrl"));
+            });
 
             services.AddSpaStaticFiles(configuration =>
             {
@@ -61,8 +68,9 @@ namespace UdemyAnimeList.Web
                 .AddAutoMapper(assembly);
 
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions())
-                .AddAWSService<IAmazonS3>()
-                .AddOptions<AmazonS3Configuration>();
+                .AddAWSService<IAmazonS3>();
+
+            services.Configure<AmazonS3Configuration>(Configuration.GetSection("S3Configuration"));
 
             services.AddScoped<IConfigurationCache, ConfigurationCache>()
                 .AddScoped<IAmazonS3Service, AmazonS3Service>()
@@ -106,7 +114,6 @@ namespace UdemyAnimeList.Web
 
             app.Use(async (context, next) =>
             {
-
                 var tokens = antiforgery.GetAndStoreTokens(context);
                 context.Response.Cookies.Append("XSRF-TOKEN", tokens.RequestToken, new CookieOptions { HttpOnly = false });
 

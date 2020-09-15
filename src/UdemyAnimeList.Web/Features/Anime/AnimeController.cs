@@ -39,7 +39,7 @@ namespace UdemyAnimeList.Web.Features.Anime
         [ValidateAntiForgeryToken]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Edit(Edit.Command model)
+        public async Task<IActionResult> Edit([FromForm] Edit.Command model)
         {
             await _mediator.Send(model);
             return NoContent();
