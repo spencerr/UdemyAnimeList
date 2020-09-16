@@ -134,9 +134,8 @@ namespace UdemyAnimeList.Web.Features.Anime
             public MappingProfile()
             {
                 CreateMap<Command, DbAnime>()
-                    .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow));
-                CreateMap<DbAnime, Command>()
                     .ForMember(dest => dest.ImageUrl, opt => opt.Ignore());
+                CreateMap<DbAnime, Command>();
             }
         }
     }

@@ -27,9 +27,6 @@ namespace UdemyAnimeList.Domain.Models
         public ShowType ShowType { get; set; }
         public TVRating TVRating { get; set; }
 
-        public DateTimeOffset CreatedAt { get; set; }
-        public DateTimeOffset? UpdatedAt { get; set; }
-        
         public Season Season { get; set; }
         public ICollection<Episode> Episodes { get; set; }
 

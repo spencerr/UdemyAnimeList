@@ -300,7 +300,7 @@ export enum TVRating {
 
 export class AnimeEditCommand {
     id!: string;
-    seasonId?: string | undefined;
+    seasonId?: number | undefined;
     japaneseName?: string | undefined;
     englishName?: string | undefined;
     synopsys?: string | undefined;
@@ -364,7 +364,7 @@ export class AnimeEditCommand {
 }
 
 export class AnimeCreateCommand {
-    seasonId?: string | undefined;
+    seasonId?: number | undefined;
     japaneseName?: string | undefined;
     englishName?: string | undefined;
     synopsys?: string | undefined;

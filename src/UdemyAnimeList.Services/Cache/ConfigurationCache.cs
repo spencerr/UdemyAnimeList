@@ -31,7 +31,7 @@ namespace UdemyAnimeList.Services.Cache
         {
             if (!_memoryCache.TryGetValue(key, out T value))
             {
-                var entry = await _context.Configuration.FindAsync(key);
+                var entry = await _context.Configurations.FindAsync(key);
                 if (entry?.Value == null)
                 {
                     return default;
