@@ -7,7 +7,7 @@
       "msBuildProjectExtensionsPath": null,
       "configuration": null,
       "runtime": null,
-      "targetFramework": "netcoreapp3.1",
+      "targetFramework": "net5.0",
       "noBuild": true,
       "verbose": true,
       "workingDirectory": ".",

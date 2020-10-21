@@ -31,7 +31,12 @@ const routes = [
   {
     path: '/anime/:id/edit',
     name: 'edit-anime',
-    component: () => import('../views/Anime/Edit.vue')
+    component: () => import('../views/Anime/CreateEdit.vue')
+  },
+  {
+    path: '/anime/create',
+    name: 'create-anime',
+    component: () => import('../views/Anime/CreateEdit.vue')
   }
 ]
 

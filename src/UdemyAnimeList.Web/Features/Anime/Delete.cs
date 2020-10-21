@@ -1,14 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UdemyAnimeList.Domain;
-using UdemyAnimeList.Services.Amazon;
-
-using DbAnime = UdemyAnimeList.Domain.Models.Anime;
+using UdemyAnimeList.Services.Storage;
 
 namespace UdemyAnimeList.Web.Features.Anime
 {
@@ -23,13 +19,13 @@ namespace UdemyAnimeList.Web.Features.Anime
         {
             private readonly ApplicationDbContext _context;
             private readonly IMapper _mapper;
-            private readonly IAmazonS3Service _s3;
+            private readonly IBucketStorage _bucketStorage;
 
-            public CommandHandler(ApplicationDbContext context, IMapper mapper, IAmazonS3Service s3)
+            public CommandHandler(ApplicationDbContext context, IMapper mapper, IBucketStorage bucketStorage)
             {
                 _context = context;
                 _mapper = mapper;
-                _s3 = s3;
+                _bucketStorage = bucketStorage;
             }
 
             public async Task Handle(Command request, CancellationToken cancellationToken)
@@ -38,7 +34,7 @@ namespace UdemyAnimeList.Web.Features.Anime
 
                 if (!string.IsNullOrEmpty(anime.ImageUrl))
                 {
-                    await _s3.Remove(anime.ImageUrl);
+                    await _bucketStorage.Remove(anime.ImageUrl);
                 }
 
                 _context.Remove(anime);

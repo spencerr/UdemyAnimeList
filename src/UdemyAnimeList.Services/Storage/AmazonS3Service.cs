@@ -10,21 +10,15 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace UdemyAnimeList.Services.Amazon
+namespace UdemyAnimeList.Services.Storage
 {
-    public interface IAmazonS3Service
-    {
-        Task<bool> Put(IFormFile file, string key);
-        Task<bool> Remove(string key);
-    }
-
     public class AmazonS3Configuration 
     {
         public string BucketName { get; set; }
         public string CdnUrl { get; set; }
     }
 
-    public class AmazonS3Service : IAmazonS3Service
+    public class AmazonS3Service : IBucketStorage
     {
         private readonly IAmazonS3 _amazonS3;
         private readonly AmazonS3Configuration _amazonS3Config;

@@ -14,7 +14,6 @@ using UdemyAnimeList.Domain;
 using UdemyAnimeList.Domain.Common;
 using UdemyAnimeList.Domain.Enums;
 using UdemyAnimeList.Domain.Models;
-using UdemyAnimeList.Services.Amazon;
 using UdemyAnimeList.Services.Cache;
 using UdemyAnimeList.Web.Intrastructure;
 using DbAnime = UdemyAnimeList.Domain.Models.Anime;

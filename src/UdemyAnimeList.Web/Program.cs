@@ -11,24 +11,20 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using UdemyAnimeList.Domain;
+using UdemyAnimeList.Web.Middleware;
 
 namespace UdemyAnimeList.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             try
             {
                 var host = CreateHostBuilder(args).Build();
 
-                using (var scope = host.Services.CreateScope())
-                {
-                    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                    db.Database.Migrate();
-                }
-
-                host.Run();
+                await host.MigrateAsync<ApplicationDbContext>();
+                await host.RunAsync();
             }
             catch(Exception ex)
             {

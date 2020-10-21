@@ -20,13 +20,13 @@ using Microsoft.Extensions.Hosting;
 using UdemyAnimeList.Domain;
 using UdemyAnimeList.Web.Infrastructure;
 using UdemyAnimeList.Services.Cache;
-using UdemyAnimeList.Services.Amazon;
 using Serilog;
 using UdemyAnimeList.Web.Middleware;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
 using UdemyAnimeList.Web.Intrastructure;
 using Microsoft.Extensions.Options;
+using UdemyAnimeList.Services.Storage;
 
 namespace UdemyAnimeList.Web
 {
@@ -73,7 +73,7 @@ namespace UdemyAnimeList.Web
             services.Configure<AmazonS3Configuration>(Configuration.GetSection("S3Configuration"));
 
             services.AddScoped<IConfigurationCache, ConfigurationCache>()
-                .AddScoped<IAmazonS3Service, AmazonS3Service>()
+                .AddScoped<IBucketStorage, AmazonS3Service>()
                 .AddMemoryCache();
 
             services.AddHangfire(x => x.UsePostgreSqlStorage(Configuration.GetConnectionString("DefaultConnection")))

@@ -3,6 +3,8 @@
     <div v-if="!loaded" class="d-flex justify-content-center">
       <b-spinner class="m-5 text-primary"></b-spinner>
     </div>
+    <h4 v-if="create">Create Anime</h4>
+    <h4 v-if="!create">Edit Anime {{ anime.japaneseName || anime.englishName }}</h4>
     <b-form @submit.stop.prevent="handleSubmit(onSubmit)" v-if="loaded">
       <div id="validationSummary" class="alert alert-danger d-none"></div>
       <div class="row">
@@ -15,14 +17,14 @@
               <input id="image" class="d-none" type="file" accept="image/x-png,image/jpeg" @change="processFile($event)" />
             </div>
             <div class="col-md-8">
-              <validation-provider v-slot="validationContext" vid="japaneseName" immediate rules="required_if_not:englishName" :custom-messages="{ required_if_not: 'A Japanese or English name is required.' }">
+              <validation-provider v-slot="validationContext" vid="japaneseName" rules="required_if_not:englishName" :custom-messages="{ required_if_not: 'A Japanese or English name is required.' }">
                 <b-form-group label="Japanese Name">
                   <b-form-input v-model="anime.japaneseName" :state="getValidationState(validationContext)" />
                   <b-form-invalid-feedback> {{ validationContext.errors[0] }}</b-form-invalid-feedback>
                 </b-form-group>
               </validation-provider>
 
-              <validation-provider v-slot="validationContext" vid="englishName" immediate rules="required_if_not:japaneseName" :custom-messages="{ required_if_not: 'A Japanese or English name is required.' }">
+              <validation-provider v-slot="validationContext" vid="englishName" rules="required_if_not:japaneseName" :custom-messages="{ required_if_not: 'A Japanese or English name is required.' }">
                 <b-form-group label="English Name">
                   <b-form-input v-model="anime.englishName" :state="getValidationState(validationContext)" />
                   <b-form-invalid-feedback> {{ validationContext.errors[0] }}</b-form-invalid-feedback>
@@ -37,14 +39,14 @@
               <b-form-invalid-feedback> {{ validationContext.errors[0] }}</b-form-invalid-feedback>
             </b-form-group>
           </validation-provider>
-          
+
           <validation-provider v-slot="validationContext">
             <b-form-group label="Background">
               <b-form-textarea v-model="anime.background" rows="5"></b-form-textarea>
               <b-form-invalid-feedback> {{ validationContext.errors[0] }}</b-form-invalid-feedback>
             </b-form-group>
           </validation-provider>
-          
+
           <validation-provider v-slot="validationContext">
             <b-form-group label="Source">
               <b-form-input type="text" v-model="anime.source" />
@@ -110,16 +112,21 @@ export default {
   data() {
     return {
       anime: {},
-      loaded: false
+      loaded: false,
+      create: false
     };
   },
   async mounted() {
     const id = this.$route.params.id;
-    const response = await this.axios.get(`/anime/${id}/edit`);
-    if (response.data.id !== id)
-      return;
+    if (id !== undefined) {
+      const response = await this.axios.get(`/anime/${id}/edit`);
+      if (response.data.id !== id)
+        return;
 
-    this.anime = response.data;
+      this.anime = response.data;
+    }
+
+    this.create = id === undefined;
     this.loaded = true;
   },
   computed: {
@@ -151,7 +158,7 @@ export default {
         }
       });
 
-      this.axios.put(`/anime/${this.anime.id}`, formData)
+      this.axios[this.create ? 'post' : 'put'](`/anime/${!this.create ? this.anime.id : ''}`, formData)
         .then(response => {
           this.$router.push({ name: 'view-anime', params: { id: this.anime.id } });
         }).catch(json => {
@@ -159,6 +166,26 @@ export default {
             this.$refs.form.setErrors(json.errors);
           }
         });
+
+      /*if (this.create) {
+        this.axios.post('/anime', formData)
+          .then(response => {
+            this.$router.push({ name: 'view-anime', params: { id: response.data.id } });
+          }).catch(json => {
+            if (json.errors) {
+              this.$ref.form.setErrors(json.errors);
+            }
+          });
+      } else {
+        this.axios.put(`/anime/${this.anime.id}`, formData)
+          .then(response => {
+            this.$router.push({ name: 'view-anime', params: { id: this.anime.id } });
+          }).catch(json => {
+            if (json.errors) {
+              this.$refs.form.setErrors(json.errors);
+            }
+          });
+      }*/
     }
   }
 }

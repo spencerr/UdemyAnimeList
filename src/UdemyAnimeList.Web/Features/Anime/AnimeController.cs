@@ -20,8 +20,9 @@ namespace UdemyAnimeList.Web.Features.Anime
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Index()
-            => View(await _mediator.Send(new Index.Query()));
+            => Ok(await _mediator.Send(new Index.Query()));
         
         [HttpGet("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -49,10 +50,10 @@ namespace UdemyAnimeList.Web.Features.Anime
         [ValidateAntiForgeryToken]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create(Create.Command model)
+        public async Task<IActionResult> Create([FromForm] Create.Command model)
         {
             var id = await _mediator.Send(model);
-            return CreatedAtAction("View", new { id });
+            return Created($"/api/anime/{id}", new { id });
         }
 
         [HttpDelete("{id:guid}")]

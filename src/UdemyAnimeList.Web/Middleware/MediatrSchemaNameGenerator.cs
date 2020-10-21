@@ -20,10 +20,6 @@ namespace UdemyAnimeList.Web.Middleware
             var parentClassName = type.FullName.Replace($"{type.Namespace}.", "").Replace(className, "").Split("+").FirstOrDefault();
 
             return $"{controllerName}{parentClassName}{className}";
-
-            //var fullName = type.FullName.Split(".");
-            //var modelName = string.Join("", fullName.Skip(fullName.Length - 2));
-            //return modelName.Replace("+", "");
         }
     }
 

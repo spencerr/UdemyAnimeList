@@ -13,8 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UdemyAnimeList.Domain;
 using UdemyAnimeList.Domain.Enums;
-using UdemyAnimeList.Domain.Models;
-using UdemyAnimeList.Services.Amazon;
+using UdemyAnimeList.Services.Storage;
 using UdemyAnimeList.Web.Intrastructure;
 using DbAnime = UdemyAnimeList.Domain.Models.Anime;
 
@@ -92,13 +91,13 @@ namespace UdemyAnimeList.Web.Features.Anime
         {
             private readonly ApplicationDbContext _context;
             private readonly IMapper _mapper;
-            private readonly IAmazonS3Service _s3;
+            private readonly IBucketStorage _bucketStorage;
 
-            public CommandHandler(ApplicationDbContext context, IMapper mapper, IAmazonS3Service s3)
+            public CommandHandler(ApplicationDbContext context, IMapper mapper, IBucketStorage bucketStorage)
             {
                 _context = context;
                 _mapper = mapper;
-                _s3 = s3;
+                _bucketStorage = bucketStorage;
             }
 
             public async Task<Guid> Handle(Command request, CancellationToken cancellationToken)
@@ -108,7 +107,7 @@ namespace UdemyAnimeList.Web.Features.Anime
 
                 if (request.Image != null)
                 {
-                    var success = await _s3.Put(request.Image, $"images/icons/{anime.Id}");
+                    var success = await _bucketStorage.Put(request.Image, $"images/icons/{anime.Id}");
                     if (success)
                     {
                         anime.ImageUrl = $"images/icons/{anime.Id}";
